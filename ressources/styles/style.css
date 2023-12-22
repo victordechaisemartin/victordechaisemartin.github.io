@@ -259,7 +259,7 @@ main {
 
 .projects-container {
 	max-width: 1200px;
-	margin: auto;
+	margin: auto auto 100px auto;
 	padding: 20px;
 }
 
