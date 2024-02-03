@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Page</title>
+	<link rel="icon" href="../../ressources/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../../ressources/styles/style.css">
+    <script src="https://kit.fontawesome.com/cb30d04475.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav>
+		<div class="logo">
+			<img src="../../ressources/images/Logo.png" alt="Victor's Logo">
+			<span class="portfolio-text">Victor's Portfolio</span>
+		</div>
+	   	<div class="nav-container">
+			<div class="social-media-links">
+				<a href="https://github.com/victordechaisemartin" target="_blank" rel="noopener noreferrer">
+					<i class="fab fa-github"></i>
+				</a>
+				<a href="https://linkedin.com/in/victor-de-chaisemartin/" target="_blank" rel="noopener noreferrer">
+					<i class="fab fa-linkedin-in"></i>
+				</a>
+	    	</div>
+        	<div class="nav-links">
+            		<li><a href="../../index.html">Home</a></li>
+            		<li><a href="../index.html" class="active">Projects</a></li>
+					<li><a href="../../about/index.html">About me</a></li>
+                    <li><a href="../../contact/index.html">Contact</a></li>
+       		</div>
+		</div>
+    </nav>
+    <div class="banner">
+        <img src="../../ressources/images/project1/project1.png" alt="Banner Image">
+    </div>
+    <div class="project-content">
+        <div class="projects-title">
+            <h1>Traffic Forecasting</h1>
+            <p>10/12/2023</p>
+        </div>
+        <div class="text">
+            <p>Welcome to my Traffic Forecasting project! Here, I delve into the intricate patterns of traffic flow on three major Parisian roads: Champs-Elysées, Convention, and Saint-Pères. My journey through data analysis and predictive modeling aims to offer a new perspective on managing and understanding urban traffic.</p>
+        </div>
+        <p><br></p>
+        <p>View the full project on <a href="https://github.com/victordechaisemartin/traffic-prediction" target="_blank" class="github-link">GitHub</a>.</p>
+
+        <div class="context">
+            <h2>Context</h2>
+            <p>In this section, I'll guide you through the background of this project. Why traffic forecasting in Paris? What makes these roads unique? Understanding the context sets the stage for appreciating the complexity and necessity of this endeavor.</p>
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/paris-black-and-white-map.png" alt="Paris Map">
+            </div>
+            <p>Predicting traffic flow on Champs-Elysées and Convention, two of Paris' busiest roads, is more than a matter of convenience; it's a step towards smarter city living. By accurately forecasting traffic patterns, we can not only help commuters avoid frustrating jams but also contribute to reducing carbon emissions. Less time spent in traffic means less fuel burned, making a significant impact on our urban environment.</p>
+            <p><br></p>
+            <p>Here is a list of objectives I set myself for this project<br></p>
+            <ul class="objectives">
+                <li>Develop a robust traffic prediction model.</li>
+                <li>Analyze traffic patterns over time.</li>
+                <li>Understand the impact of weather and events on traffic flow.</li>
+                <li>Improve urban mobility planning.</li>
+            </ul>
+        </div>
+        <div class="data-analysis">
+            <h2>Data Analysis</h2>
+            <p>Data Analysis is the cornerstone of any data science project. This project is focused on obtaining a clearer understanding of Parisian traffic patterns through prediction and analysis. The aim is to identify the most favorable times for travel, effectively reducing the likelihood of encountering traffic congestion. Additionally, the project seeks to uncover and comprehend the various factors that influence these traffic trends.</p>
+            <p><br></p>
+            <p>First, lets plot our data to have a better understanding of the underlying trends</p>
+            <!-- Plot 1  -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot1.png" alt="Traffic Volume Trends: AV_Champs_Elysees vs Convention">
+                <p><strong>Traffic Volume Trends:</strong> Here, you can see the comparison of hourly traffic flow between the Champs Elysees and Convention over time, highlighting peak hours and quieter periods. The traffic in the Champs is more important than in Convention. This was expected as this road is very famous for tourist ansd one of the main axis for traveling in Paris.</p>
+            </div>
+
+            <!-- Plot 2 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot2.png" alt="Daily Traffic in the Champs Elysees">
+                <p><strong>Daily Traffic in the Champs Elysees:</strong> A closer look at the daily fluctuations in traffic within the Champs Elysees and Convention area, with detailed hourly data points. This plot highlights the daily patterns over a week in between the 25/11 and the 4/12.</p>
+            </div>
+
+            <!-- Plot 3 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot3.png" alt="Weekly Traffic Trends Comparison">
+                <p><strong>Weekly Traffic Trends:</strong> Analysis of average traffic flow in the Champs Elysees compared to the Convention area, broken down by days of the week. This shows that the traffic is slowly increasing as we head into the end of the week. A possible interpretation could be that people use their car more during the end of the week as they might be more tired.</p>
+            </div>
+
+            <!-- Plot 4 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot4.png" alt="Hourly Traffic Trends Throughout a Day">
+                <p><strong>Hourly Traffic Trends:</strong> This graph illustrates the trends in traffic volume for both locations throughout the day, from early hours to late at night. You can clearly see that traffic reaches a minimum at 5am and its maximum at 6pm.</p>
+            </div>
+
+            <!-- Plot 5 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot5.png" alt="Monthly Traffic Flow Analysis">
+                <p><strong>Monthly Traffic Trends:</strong> A monthly overview of traffic patterns, showing seasonal changes and monthly variations in traffic density. People use their car more often in the winter. This is certainly due to the cold temperatures. Furthermore, you can also see a peak in traffic in june. This might be due to the summer holidays where many people travel to Paris or away from Paris.</p>
+            </div>
+        </div>
+        <div class="data-processing">
+            <h2>Data Processing</h2>
+            <p>Now that we have analyzed our data we can start the pre-processing.</p>
+            <p><br></p>
+            <p>The data is relatively clean and contains no missing values. However, to improve the quality of our predictions, we can look for new external data sources that are correlated with traffic. Here are some examples of the different types of variables that we have added :</p>
+            <ul class="objectives">
+                <li>Temperature, Humidity, Visibility, Wind Speed</li>
+                <li>Special Events, Holidays</li>
+                <li>Construction Sites, Riots</li>
+                <li>Markets, Touristic zones</li>
+            </ul>
+            <p>We can also plot the correlation map of our different variables to gain insights on their usefulness.</p>
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot9.png" alt="Correlation Heatmap for Traffic Variables">
+                <p><strong>Correlation Heatmap:</strong> A heatmap representing the correlation between different variables such as weather conditions, time, and traffic flow.</p>
+            </div>
+        </div>
+        <div class="data-modelling">
+            <h2>Data Modelling</h2>
+            <p>Data modelling is where the magic happens. In this section, I share the methodologies and algorithms used to predict traffic patterns. You'll get a glimpse of the coding and statistical analysis that power the forecasts</p>
+            <pre><code class="language-python">
+            from sklearn.model_selection import GridSearchCV
+
+            def xgboost_forecasting_training(data, n_test, predictor):
+                train, test = data.iloc[:-n_test, :], data.iloc[-n_test:, :]
+                trainX, trainy = train.loc[:, ~train.columns.isin(['Débit horaire', "Taux d'occupation"])], train.loc[:, [predictor]]
+                testX, testy = test.loc[:, ~train.columns.isin(['Débit horaire', "Taux d'occupation"])], test.loc[:, [predictor]]
+            
+                trainX = np.asarray(trainX)
+                trainy = np.asarray(trainy)
+                testX = np.asarray(testX)
+                testy = np.asarray(testy)
+            
+                # Define the parameter grid to search
+                param_grid = {
+                    'n_estimators': [100, 500, 1000],
+                    'learning_rate': [0.01, 0.05, 0.1],
+                    'max_depth': [3, 5, 7],
+                    'colsample_bytree': [0.7, 0.8, 1.0],
+                    'subsample': [0.7, 0.8, 1.0]
+                }
+            
+                # Initialize the XGBRegressor
+                model = XGBRegressor(objective='reg:squarederror')
+            
+                # Initialize the GridSearchCV
+                grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, n_jobs=-1, scoring='neg_mean_squared_error')
+            
+                # Fit the grid search to the data
+                grid_search.fit(trainX, trainy)
+            
+                # Best model
+                best_model = grid_search.best_estimator_
+            
+                # Predict using the best model
+                yhat = best_model.predict(testX)
+            
+                # Calculate RMSE
+                error = mean_squared_error(testy, yhat)
+                rmse = np.sqrt(error)
+            
+                return testy, yhat, rmse, best_model, grid_search.best_params_                
+            </code></pre>
+            <!-- Plot 6 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot6.png" alt="SHAP values for Traffic Variables">
+                <p><strong>Correlation Heatmap:</strong> A heatmap representing the correlation between different variables such as weather conditions, time, and traffic flow.</p>
+            </div>
+
+            <!-- Plot 7 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot7.png" alt="Predictive Model Results for Debit Champs">
+                <p><strong>Predictive Model Results for Debit Champs:</strong> The expected versus predicted traffic flow in the Debit Champs area, showing the accuracy of the predictive model.</p>
+            </div>
+
+            <!-- Plot 8 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project1/plot8.png" alt="Predictive Analysis for Taux Champs">
+                <p><strong>Predictive Analysis for Taux Champs:</strong> This plot compares the expected and predicted occupancy rates in the Taux Champs area.</p>
+            </div>
+        </div>
+        <div class="results">
+            <h2>Conclusion</h2>
+            <p>We've reached the end of our traffic forecasting project, and the results speak for themselves. Our 'Debit Champs' graph shows that our model is on point with real-world traffic flow, matching closely with what was expected. This means our predictions are reliable and can be trusted for planning daily commutes. <br><br>
+
+                However, the 'Taux Champs' graph reveals there's still room for improvement. While our predictions are good, they're not perfect. We see some discrepancies, which are valuable learning opportunities. They highlight the unpredictable elements of traffic that we'll aim to better understand in our next iteration. Moreover, you can see that predicting traffic for Champs is much harder than for convention. <br><br>
+                
+                In essence, this project has shown us the power of data in improving how we navigate and plan around city traffic. With further refinement, our goal is to make traffic predictions that can help reduce congestion and make our cities more efficient.</p>
+        </div>
+    </div>
+    <div class="related-projects">
+        <h2>Read Next</h2>
+        <div class="project-list">
+
+            <!-- Project 1 -->
+            <div class="project-card">
+                <a href="../Project 2/index.html">
+                    <img src="../../ressources/images/project2/project2.png" alt="Diabetes Project">
+                    <div class="project-info">
+                        <h3>Diabetes Analysis</h3>
+                        <p>04/06/2023</p>
+                    </div>
+                </a>
+            </div>
+    
+            <!-- Project 2 -->
+            <div class="project-card">
+                <a href="../Project 3/index.html">
+                    <img src="../../ressources/images/project3/project3.png" alt="Models from scratch">
+                    <div class="project-info">
+                        <h3>Implementing ML Models from scratch</h3>
+                        <p>10/12/2023</p>
+                    </div>
+                </a>
+            </div>    
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2023 Victor de Chaisemartin. All rights reserved.</p>
+    </footer>
+  

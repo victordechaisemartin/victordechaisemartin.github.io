@@ -1,0 +1,187 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Page</title>
+	<link rel="icon" href="../../ressources/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../../ressources/styles/style.css">
+    <script src="https://kit.fontawesome.com/cb30d04475.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav>
+		<div class="logo">
+			<img src="../../ressources/images/Logo.png" alt="Victor's Logo">
+			<span class="portfolio-text">Victor's Portfolio</span>
+		</div>
+	   	<div class="nav-container">
+			<div class="social-media-links">
+				<a href="https://github.com/victordechaisemartin" target="_blank" rel="noopener noreferrer">
+					<i class="fab fa-github"></i>
+				</a>
+				<a href="https://linkedin.com/in/victor-de-chaisemartin/" target="_blank" rel="noopener noreferrer">
+					<i class="fab fa-linkedin-in"></i>
+				</a>
+	    	</div>
+        	<div class="nav-links">
+            		<li><a href="../../index.html">Home</a></li>
+            		<li><a href="../index.html" class="active">Projects</a></li>
+					<li><a href="../../about/index.html">About me</a></li>
+                    <li><a href="../../contact/index.html">Contact</a></li>
+       		</div>
+		</div>
+    </nav>
+    <div class="banner">
+        <img src="../../ressources/images/project3/project3.png" alt="Banner Image">
+    </div>
+    <div class="project-content">
+        <div class="projects-title">
+            <h1>Tumor Detection</h1>
+            <p>20/01/2024</p>
+        </div>
+        <div class="text">
+            <p>Welcome to my Tumor Detection project!</p>
+        </div>
+        <p><br></p>
+        <p>View the full project on <a href="https://github.com/victordechaisemartin/tumor_detection" target="_blank" class="github-link">GitHub</a>.</p>
+
+        <div class="context">
+            <h2>Context</h2>
+            <p>
+                The objective of this project is to train a model using deep learning techniques to recognize tumors on scans of metastatic tissue (or in simpler terms, images of cells). The field of digital pathology is developing rapidly, following recent advancements in microscopic imaging hardware that allow digitizing glass slides into whole-slide images. This facilitates image analysis and allows us to use deep learning models to automate diagnostics tasks.<br><br>
+                We will start by analyzing th PCAM dataset and extracting useful information. We will then dig into model architectures that are powerful for analyzing images and we will test their accuracy on our data.
+            </p>
+        </div>
+        <div class="data-analysis">
+            <h2>Data Analysis</h2>
+            <p>The PatchCamelyon benchmark (PCAM) consists of 327.680 color images (96 x 96px) extracted from histopathologic scans of lymph node sections. Each image is annoted with a binary label indicating presence of metastatic tissue.<br><br>
+                Let's plot ten 5 images containing tumors (label : 1) and 5 without (label : 0) to see if we can see the difference.
+            </p>
+            <!-- Plot 1  -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project3/plot1.png" alt="Plot of 10 images with their labels">
+                <figcaption>Fig 1: Plot of 10 images with their labels</figcaption>
+                <p>
+                    As you can see, each slide shows a magnified view of tissue samples stained to highlight cellular structures and anomalies.
+                    The top row, labeled '0', represents biopsy slides that have been identified as benign, showing no signs of cancer. The bottom row, labeled '1', contains images of biopsy slides that are malignant, indicating the presence of cancer.<br><br>
+                    Next, we can plot the ditribution of our label data.
+                </p>
+            </div>
+
+            <!-- Plot 2 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project3/plot2.png" alt="Data Label Distribution">
+                <figcaption>Fig 2: Data Label Distribution</figcaption>
+                <p>The training set distribution is visualized on the left with a light blue bar, representing the frequency of each class label, whereas the validation set on the right is depicted with two gold bars. 
+                    The consistent height of the bars across both training and validation sets suggests an even class distribution, which is essential for training unbiased and well-generalized machine learning models. <br><br>
+                    This balanced distribution is particularly important in medical datasets where the accurate detection of conditions, such as cancer, is critical.
+                </p>
+            </div>
+        </div>
+        <div class="data-processing">
+            <h2>Data Processing</h2>
+            <p>Now that we have analyzed our data, we can start the pre-processing phase.</p>
+            <p><br></p>
+            <p>The data is composed of images in the same format. Therefore, there is no need for any formatting steps. 
+                However, to improve the quality of our predictions, we can apply some image transformations.
+            </p>
+            <pre><code class="language-python">
+    class PCAMDataset(Dataset):
+    def __init__(self, data, labels, train, transform = None):
+        super(PCAMDataset, self).__init__()
+        self.data = data
+        self.labels = labels
+        self.train = train
+        self.transform = transform
+
+        if self.train:
+            self.augmentation = transforms.Compose([
+                transforms.ToPILImage(),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomVerticalFlip(),
+                transforms.ToTensor()
+            ])
+        else:
+            self.augmentation = transforms.Compose([
+                transforms.ToPILImage(),
+                transforms.ToTensor()
+            ])
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        image = self.data[idx]
+        label = self.labels[idx]
+
+        image = self.augmentation(image)
+
+        if self.transform:
+            image = self.transform(image)
+
+        return image, label
+            </code></pre>
+            <p>Within this custom dataset class, specific transformations are applied to the data during preprocessing.
+                Before transforming our data, we need to turn our images from arrays to PIL images. 
+                This is necessary because the subsequent augmentation operations are implemented to work on PIL Image objects, which are a standard format for image manipulation in Python.
+                We then apply horizontal and vertical random flips to augment our data.
+            </p>
+            <div class="plot-item">
+                <img src="../../ressources/images/project3/plot3.png" alt="Explaining Data Augmentation">
+                <figcaption>Fig 3: Data Augmentation with Flipping Example</figcaption>
+                <p><strong>Data augmentation: </strong>
+                    The concept of data augmentation with flipping is particularly important in the context of medical imaging. 
+                    It artificially expands the training dataset by creating modified versions of images, which helps the model to generalize better by learning from a more diverse set of examples.
+                    Both images above are identical. However, one has been flipped to create a new image with different pixel parameters.
+                </p>
+            </div>
+        </div>
+        <div class="data-modelling">
+            <h2>Data Modelling</h2>
+            <p>Data modelling is where the magic happens. In this section, I share the methodologies and algorithms used to predict traffic patterns.
+                First, we will try different hand-made convolutional architectures to see the impact of each hyperparameters.
+                For the first model, we will build a simple 2 layer convolutional network, then we will add a third layer and compare the results.
+            </p>
+            <pre><code class="language-python">
+
+            </code></pre>
+        </div>
+        <div class="results">
+            <h2>Conclusion</h2>
+            <p>As a conclusion, I am very happy to have used my own glucose data for this project. It was very instructive to learn how to properly collect my own data, process it and use visualisations to better understand it. This helped me understand how my glucose levels have evolved over the past 4 years and motivated me to keep improving my diabetes management. Indeed, you can see that 2023 has shown significant improvements and much better glucose levels. <br><br>
+            The next steps for this project would be to collect more data such as the daily insuline intakes, meals, physical activity and more. This could help me create a machine learning model that could predict my glucose level in the upcoming hours based on the current data. With this information I could add insulin or eat sugar to avoir being outside the wanted range.</p>
+        </div>
+    </div>
+    <div class="related-projects">
+        <h2>Read Next</h2>
+        <div class="project-list">
+
+            <!-- Project 1 -->
+            <div class="project-card">
+                <a href="../Project 1/index.html">
+                    <img src="../../ressources/images/project1/project1.png" alt="Traffic Forecasting">
+                    <div class="project-info">
+                        <h3>Traffic Forecasting</h3>
+                        <p>10/12/2023</p>
+                    </div>
+                </a>
+            </div>
+    
+            <!-- Project 2 -->
+            <div class="project-card">
+                <a href="../Project 2/index.html">
+                    <img src="../../ressources/images/project2/project2.png" alt="Diabetes Analysis">
+                    <div class="project-info">
+                        <h3>I used Data Analysis tools to extract insights on my diabetes</h3>
+                        <p>02/06/2023</p>
+                    </div>
+                </a>
+            </div>    
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2023 Victor de Chaisemartin. All rights reserved.</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+</body>
+</html>
