@@ -48,20 +48,66 @@
         <div class="context">
             <h2>Context</h2>
             <p>
-                
+                This project aims to create a model that can classify comments from online platforms into various toxicity categories such as toxic, severe toxic, obscene, threat, insult, identity hate, etc... 
+                The purpose of this project is to improve online conversations by filtering out inappropriate comments. <br><br>
+                We will begin by exploring the dataset, performing data preprocessing and visualization, followed by training different machine learning models to classify the toxic comments accurately.
             </p>
         </div>
         <div class="data-analysis">
             <h2>Data Analysis</h2>
             <p>
-
+                The data analysis phase is crucial in understanding the nuances and patterns within the comments. 
+                Through various visualizations, we aim to gain insights into the distribution and nature of toxicity across different categories. 
+                These visualizations help to identify trends and commonalities within the data, providing a solid foundation for the subsequent modeling phase.
             </p>
             <!-- Plot 1  -->
             <div class="plot-item">
-                <img src="../../ressources/images/project4/plot1.png" alt="">
-                <figcaption>Fig 1: </figcaption>
+                <img src="../../ressources/images/project4/plot1.png" alt="Distribution of Categories">
+                <figcaption>Fig 1: Distribution of Categories</figcaption>
                 <p>
-                    
+                    The bar chart illustrates the distribution of comments across various categories. 
+                    It is evident that some categories have a higher frequency, indicating a greater number of comments flagged as such. 
+                    This uneven distribution poses challenges in model training due to class imbalance.
+                    A closer look at the 'toxicity' category reveals that it encompasses the majority of comments, suggesting a need for robust filtering mechanisms in online platforms to maintain healthy interactions.
+                </p>
+            </div>
+
+            <div class="plot-item">
+                <img src="../../ressources/images/project4/plot2.png" alt="Comment Word Count Distribution">
+                <figcaption>Fig 2: Comment Word Count Distribution</figcaption>
+                <p>
+                    This histogram showcases the word count distribution across the comments.
+                    Most comments are brief, but there is a long tail of longer comments which may contain more complex patterns of toxicity.
+                    The distribution's skewness towards shorter comment lengths indicates that toxic content is not always verbose, and even succinct comments can contain harmful material.
+                </p>
+            </div>
+
+            <div class="plot-item">
+                <img src="../../ressources/images/project4/plot3.png" alt="Correlation Matrix">
+                <figcaption>Fig 3: Correlation Matrix</figcaption>
+                <p>
+                    The correlation matrix here helps us understand the relationship between different categories of toxicity. 
+                    Some categories show a higher correlation, suggesting that comments often contain multiple forms of toxicity.
+                    Notably, the matrix indicates a significant overlap between 'insult' and 'obscene' comments, which could suggest a commonality in the language used for these types of toxicity.
+                </p>
+            </div>
+
+            <div class="plot-item">
+                <img src="../../ressources/images/project4/plot4.png" alt="Word Cloud for all Comments">
+                <figcaption>Fig 4: Word Cloud for all Comments</figcaption>
+                <p>
+                    This word cloud provides a visual representation of the most frequent words in all toxic comments. 
+                    The size of each word indicates its frequency, offering insights into common themes and terms used.
+                    Dominant words such as 'hate' and 'stupid' in this word cloud underscore the aggressive tone prevalent in toxic comments.
+                </p>
+            </div>
+
+            <div class="plot-item">
+                <img src="../../ressources/images/project5/plot5.png" alt="Word Cloud for LGBTQ Comments">
+                <figcaption>Fig 4: Word Cloud for LGBTQ Comments</figcaption>
+                <p>
+                    Similarly, this word cloud reflects the vocabulary of another category, enabling us to compare the language used across different forms of toxicity.
+                    The prevalence of identity-based terms suggests that a significant portion of toxic comments may be targeting specific groups or individuals.
                 </p>
             </div>
         </div>
