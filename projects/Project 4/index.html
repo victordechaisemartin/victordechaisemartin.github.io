@@ -114,21 +114,109 @@
         <div class="data-processing">
             <h2>Data Processing</h2>
             <p>
-
+                In the data processing stage, we prepare the raw text data for our machine learning models. 
+                The initial step involves converting all text data into strings to ensure consistency. 
+                This is essential as our dataset might contain numerical values or dates which we don't want to process as text.                 
             </p>
             <pre><code class="language-python">
-
+    # Convert text columns to strings
+    X['string'] = X['string'].astype(str)
+    X_val['string'] = X_val['string'].astype(str)
+    X_test['string'] = X_test['string'].astype(str)
             </code></pre>
+
+            <p>
+                Once the data is uniformly in string format, we apply a text cleaning function.
+            </p>
+
+            <pre><code class="language-python"></code>
+    # Define a function to clean the text
+    def clean_text(text):
+        # Tokenization and cleaning
+        tokens = word_tokenize(text)
+        tokens = [word for word in tokens if word.isalpha()]
+        stop_words = set(stopwords.words('english'))
+        tokens = [word for word in tokens if not word in stop_words]
+        return tokens
+    
+    # Apply cleaning function to the datasets
+    X['cleaned_text'] = X['string'].apply(clean_text)
+    X_val['cleaned_text'] = X_val['string'].apply(clean_text)
+    X_test['cleaned_text'] = X_test['string'].apply(clean_text)
+            </code></pre>
+
+            <p>
+                This function tokenizes the text, filters out punctuation and stopwords - common words that add noise rather than information to the model.
+            </p>
+
+            <pre><code class="language-python"></code>
+    # Tokenize the text data
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(data['cleaned_text'])
+    X_train_sequences = tokenizer.texts_to_sequences(data['cleaned_text'])
+    X_val_sequences = tokenizer.texts_to_sequences(data_val['cleaned_text'])
+    X_test_sequences = tokenizer.texts_to_sequences(X_test['cleaned_text'])
+    
+    # Padding the sequences
+    X_train_padded = pad_sequences(X_train_sequences, maxlen=100, padding='post', truncating='post')
+    X_val_padded = pad_sequences(X_val_sequences, maxlen=100, padding='post', truncating='post')
+    X_test_padded = pad_sequences(X_test_sequences, maxlen=100, padding='post', truncating='post')
+            </code></pre>
+
+            <p>
+                After cleaning, we tokenize the text using a tokenizer fitted on the cleaned text, which converts words into numeric sequences that the model can interpret. 
+                Lastly, we pad these sequences to a fixed length to ensure uniform input size for our neural network, using post-padding to handle sequences shorter than our fixed length.<br><br>
+                By applying these preprocessing steps, we transform the raw text into a format that a neural network can work with, enabling the model to focus on the most meaningful aspects of the text data. 
+                This is a critical phase that often determines the performance of the model as it learns to distinguish between different categories of comments based on their textual content.
+            </p>
+
         <div class="data-modelling">
             <h2>Data Modelling</h2>
             <p>
+                Data modeling is a pivotal phase where we construct a model capable of understanding patterns in the text to classify comments effectively. 
+                In this project, we've built a neural network that leverages an embedding layer, bidirectional LSTM with attention, a convolutional layer, and dense layers to process the text data.<br><br>
+                The <strong>embedding layer</strong> transforms the input sequence into dense vectors of fixed size which are more suitable for a neural network. 
+                Next, we use a <strong>bidirectional LSTM</strong> to process the sequence data from both directions, providing additional context to the network. 
+                We enhance this further with an <strong>attention mechanism</strong> that allows the model to focus on the most relevant parts of the input sequence for classification. 
+                A <strong>1D convolutional layer</strong> follows, which can pick up on local patterns across the sequence. 
+                After that, we apply a <strong>GlobalMaxPooling1D layer</strong> to reduce the dimensionality of the output from the convolutional layer. 
+                Finally, the <strong>dense layers</strong> serve as a fully connected neural network to classify the input into the toxic or non-toxic category.<br><br>
+                This approach aims to capture the intricacies of language used in toxic comments, which can be subtle and context-dependent. 
+                By combining LSTM with attention and convolutional layers, we get the benefits of both sequential and hierarchical feature extraction.
+            </p>
+            <pre><code class="language-python"></code>
+    # Model definition
+    input_layer = Input(shape=(100,))
+    embedding_layer = Embedding(emb_len, 128)(input_layer)
+    lstm_layer = Bidirectional(LSTM(128, return_sequences=True, dropout=0.2, recurrent_dropout=0.3))(embedding_layer)
+    attention = Attention()([lstm_layer, lstm_layer])
+    conv1d_layer = Conv1D(64, kernel_size=3, activation='relu')(attention)
+    global_max_pooling_layer = GlobalMaxPooling1D()(conv1d_layer)
+    dense_layer_1 = Dense(128, activation='relu')(global_max_pooling_layer)
+    output_layer = Dense(1, activation='sigmoid')(dense_layer_1)
+    cnn_att = Model(inputs=input_layer, outputs=output_layer)
 
-            </p>     
+    # Model compilation
+    cnn_att.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+    # Model training
+    history = cnn_att.fit(
+        X_train_padded, y_train,
+        batch_size=128,
+        epochs=2,
+        validation_data=(X_val_padded, y_val),
+        callbacks=[model_checkpoint_callback, early_stop]
+    )
+            </code></pre>  
         </div>
         <div class="results">
             <h2>Conclusion</h2>
             <p>
-
+                Upon training the model, we observed that it achieved a training accuracy of approximately 92.72% and a validation accuracy of 92.03% after two epochs. 
+                While these figures are promising, the slight drop in validation accuracy could suggest the beginning of overfitting. 
+                To combat this and improve the model's generalization capability, we could explore several strategies such as increasing the dropout rate, adding regularization methods, or even augmenting the training data. 
+                Moreover, experimenting with different architectures or tuning hyperparameters using techniques such as grid search could yield better results. 
+                Finally, since deep learning models often require a lot of data to perform well, gathering more data could also be a beneficial step.
             </p>
         </div>
     </div>
