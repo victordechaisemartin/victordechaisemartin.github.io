@@ -60,27 +60,190 @@
             <!-- Plot 1  -->
             <div class="plot-item">
                 <img src="../../ressources/images/project2/plot1.png" alt="Glucose levels over the years">
-                <p><strong>Evolution of my glucose levels</strong> Here, you can see a lot of variation in my glucose levels. In an ideal scenario, my glucose levels need to stay in a between 90mg/dL and 180 mg/dL. However it is often difficult to manage as you need to pay attention, to what you are eating, what insulin dose you need to administer, the physical activity you have been doing over the past hours, the emotional state you are in and the current glucose levels you are currently at.</p>
+                <figcaption>Fig 1: Glucose levels over the years</figcaption>
             </div>
+
+            <p>Here, you can see a lot of variation in my glucose levels. 
+                In an ideal scenario, my glucose levels need to stay in a between 90mg/dL and 180 mg/dL. 
+                However it is often difficult to manage as you need to pay attention, to what you are eating, what insulin dose you need to administer, the physical activity you have been doing over the past hours, the emotional state you are in and the current glucose levels you are currently at.</p>
+
 
             <!-- Plot 2 -->
             <div class="plot-item">
                 <img src="../../ressources/images/project2/plot2.png" alt="Daily Glucose Trends over the past 4 years">
-                <p><strong>Daily Glucose Trends over the past 4 years:</strong> A closer look at the daily fluctuations help us see that my glucose levels are steadily decreasing which is good. 2021 was a very bad year as yo ucan see that my average glucose is above the wanted range.</p>
+                <figcaption>Fig 2: Daily Glucose Trends over the past 4 years</figcaption>
             </div>
+
+            <p>A closer look at the daily fluctuations help us see that my glucose levels are steadily decreasing which is good. 
+                2021 was a very bad year as yo ucan see that my average glucose is above the wanted range.
+            </p>
 
             <!-- Plot 3 -->
             <div class="plot-item">
                 <img src="../../ressources/images/project2/plot3.png" alt="Time in range over the past 4 years">
-                <p><strong>Time in range over the past 4 years:</strong> In this analysis, you can compare the time in range for my glucose levels over the past 4 years. Again, you can see that in 2021, my glucose levels were not at all in range. However, there has been a noticable improvement in 2022 and even more in 2023.</p>
+                <figcaption>Fig 3: Time in range over the past 4 years</figcaption>
             </div>
+            <p>In this analysis, you can compare the time in range for my glucose levels over the past 4 years. 
+                Again, you can see that in 2021, my glucose levels were not at all in range. 
+                However, there has been a noticable improvement in 2022 and even more in 2023.</p>
 
             <!-- Plot 4 -->
             <div class="plot-item">
                 <img src="../../ressources/images/project2/plot4.png" alt="Evolution of A1c over the past 4 years">
-                <p><strong>Evolution of A1c:</strong> A1c is a good indicator to evaluate your blood sugar control. This metric corresponds to the percentage of hemoglobin proteins in your blood are coated with sugar. It uses the last 3 months of glucose data. <br><br>
-                    A good range for diabetes is too maintain your A1c under 7.5. As you can see in 2021 my A1c increased significantly. In 2023, I have reached my objective of decreasing my A1C below 7.5. </p>
+                <figcaption>Fig 4: Evolution of A1c over the past 4 years</figcaption>
             </div>
+            <p>A1c is a good indicator to evaluate your blood sugar control. This metric corresponds to the percentage of hemoglobin proteins in your blood are coated with sugar. It uses the last 3 months of glucose data. <br><br>
+                A good range for diabetes is too maintain your A1c under 7.5. As you can see in 2021 my A1c increased significantly. 
+                In 2023, I have reached my objective of decreasing my A1C below 7.5. <br><br>
+                Now, we can take a look at our insulin data. 
+                This is important as it plays an important role for decreasing my blood sugar whenever I eat.
+                Therefore, it is necessary to correctly predict my blood sugar.
+            </p>
+
+            <!-- Plot 4 -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project2/insulineplot.png" alt="Insulin Injection per hour of the day">
+                <figcaption>Fig 5: Insulin Injection per hour of the day</figcaption>
+            </div>
+            <p>
+                You can see here is a high injection spike at noon and at night. 
+                This corresponds exactly to lunch time and dinner time.
+                I also have data throughout the day as I need to inject insulin if I eat during the afternoon or at night time if my blood sugar is too high.
+            </p>
+        </div>
+
+        <div class="data-processing">
+            <h2>Data Processing</h2>
+            <p>
+                Prior to training our predictive model, it's imperative to process our data meticulously. 
+                Initially, we convert our 'Timestamp' column to the datetime data type, which is essential for any time series analysis. 
+                Subsequently, we enrich our dataset by extracting and including 'Day of the Week' and 'Hour' columns, thereby integrating crucial temporal features that can significantly influence glucose level patterns. 
+                Lastly, to ensure the model's relevance and immediacy in forecasting, we refine our dataset to encompass only the most recent three months of data, providing a focused and up-to-date temporal window for our analysis.
+            </p>
+            <pre><code class="language-python"></code>
+    glucose = diab_data[['Device Timestamp','Historic Glucose mg/dL']]
+    glucose = glucose.dropna(subset=['Historic Glucose mg/dL'])
+    glucose['Device Timestamp'] = pd.to_datetime(glucose['Device Timestamp'])
+    
+    glucose['DayOfWeek'] = glucose['Device Timestamp'].dt.dayofweek
+    glucose['HourOfDay'] = glucose['Device Timestamp'].dt.hour
+    
+    # Filter the last three months for training + validation
+    three_months_ago = glucose['Device Timestamp'].max() - pd.DateOffset(months=3)
+    last_three_months_data = glucose[glucose['Device Timestamp'] >= three_months_ago]
+            </code></pre>
+            <p>
+                We also need to process and add our insulin data.
+                Integrating insulin data into our glucose dataset involves a data alignment process to ensure that insulin delivery events correspond to the appropriate glucose readings. 
+                To achieve this, we've implemented a Python function that identifies the nearest glucose timestamp for each insulin event within a two-hour window—a critical period where insulin has a pronounced effect on glucose levels. 
+                This function iteratively searches through the glucose data to locate the closest match for each insulin entry, both for bolus (mealtime insulin) and basal (background insulin) doses. 
+                Upon finding a match, the glucose record is updated with the insulin dosage delivered, thus creating a comprehensive dataset that reflects the interplay between insulin administration and glucose levels over the last three months. 
+                This enriched dataset lays the groundwork for more nuanced analysis and modeling, as it captures the dynamic and influential relationship between insulin usage and glucose fluctuations.
+            </p>
+        </div>
+
+        <div class="data-modelling">
+            <h2>Data Modelling</h2>
+            <p>Now that we have analyzed and processed our data we can start training machine learning models to predict mu glucose values.
+                The first model we will use an XGBoost. <br><br>
+                XGBoost stands for eXtreme Gradient Boosting and is a powerful machine learning algorithm that's widely used in predictive modeling and data science competitions. 
+                It is an implementation of gradient boosted decision trees designed for speed and performance. 
+                XGBoost works by sequentially adding predictors to an ensemble, each one correcting its predecessor. 
+                This model is robust because it combines a large number of simple models (known as weak learners) to create a more accurate and robust prediction. 
+                Each new tree takes into account the errors or mispredictions made by the previous trees in the sequence. 
+                It's called 'Gradient Boosting' because it uses a gradient descent algorithm to minimize the loss when adding new models. 
+                This iterative minimization is accomplished by quantifying the inaccuracies in the predictions and using that to adjust the model's predictions in subsequent iterations. <br><br> 
+                It's particularly effective for time series forecasting because it can handle sequential data and uncover complex temporal patterns by leveraging its ensemble learning approach.
+            </p>
+            <div class="plot-item">
+                <img src="../../ressources/images/project2/plot5.png" alt="Autocorrelation Function">
+                <figcaption>Fig 6: Autocorrelation plots</figcaption>
+                <p>These plots are instrumental in understanding the time-dependent structure of the glucose data. 
+                    The autocorrelation plot indicates how the data points are related to each other, which is crucial for time series forecasting. <br><br>
+                    The autocorrelation function (ACF) and partial autocorrelation function (PACF) plots are key tools in time series analysis that help us understand the time-dependent structure of the glucose data. The ACF plot shows how data points in the series are related to their previous values, which is indicative of the overall trend and seasonality. This insight is crucial for Autoregressive (AR) models, where future values are predicted based on a combination of past values. 
+                    The PACF plot, on the other hand, reveals the extent of the correlation between the series and its lags after eliminating the contributions from the intermediate lags. 
+                    This helps in identifying the order of the AR terms if an AR model is to be fitted. <br><br>
+                    Moving Average (MA) models are also informed by these plots, as they predict future values based on the past forecast errors, with the ACF helping to determine the number of MA terms. 
+                    Together, AR and MA components are combined in an ARMA model, or with integration in an ARIMA model, which can be particularly powerful for analyzing and making predictions on time series data like glucose levels, capturing both the momentum and the shocks or random fluctuations observed through time.
+                </p>
+            </div>
+            
+            <pre><code class="language-python">
+    import xgboost as xgb
+    from sklearn.metrics import mean_squared_error
+    
+    # Split the last three months into training and validation sets (last week for validation)
+    one_week_ago = last_three_months_data['Device Timestamp'].max() - pd.DateOffset(weeks=1)
+    train_data = last_three_months_data[last_three_months_data['Device Timestamp'] < one_week_ago]
+    validation_data = last_three_months_data[last_three_months_data['Device Timestamp'] >= one_week_ago]
+    
+    # Prepare the data
+    X_train = train_data[['DayOfWeek', 'HourOfDay']]
+    y_train = train_data['Historic Glucose mg/dL'].astype(float)
+    X_validation = validation_data[['DayOfWeek', 'HourOfDay']]
+    y_validation = validation_data['Historic Glucose mg/dL'].astype(float)
+    
+    # Train the XGBoost model
+    model = xgb.XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
+                    max_depth = 5, alpha = 10, n_estimators = 100)
+    model.fit(X_train, y_train)
+    
+    # Make predictions on the validation set
+    predictions = model.predict(X_validation)
+    
+    # Evaluate the model on the validation set
+    mse = mean_squared_error(y_validation, predictions)
+    rmse = np.sqrt(mse)
+    print(f'RMSE on validation set: {rmse}')            
+            </code></pre>
+
+            <p>
+                For this first model, we obtained a RMSE on the validation set of 73,05. 
+                This gives an error percentage of 43,74% which is very high. 
+                Unfortunately, without data on carbonhydrate intakes, we cannot effectively predict the trend of my glucose values.<br><br>
+                To improve our model we can also try to add the insulin data to our model.
+            </p>
+
+            <pre><code class="language-python"></code>
+    # Prepare the data
+    X_train = train_data[['DayOfWeek', 'HourOfDay', 'bolus']]
+    y_train = train_data['Historic Glucose mg/dL'].astype(float)
+    X_validation = validation_data[['DayOfWeek', 'HourOfDay', 'bolus']]
+    y_validation = validation_data['Historic Glucose mg/dL'].astype(float)
+    
+    # Train the XGBoost model
+    model = xgb.XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
+                    max_depth = 5, alpha = 10, n_estimators = 100)
+    model.fit(X_train, y_train)
+    
+    # Make predictions on the validation set
+    predictions = model.predict(X_validation)
+    
+    # Evaluate the model on the validation set
+    mse = mean_squared_error(y_validation, predictions)
+    rmse = np.sqrt(mse)
+    print(f'RMSE on validation set: {rmse}')
+            </code></pre>
+
+            <p>
+                With this change, we now obtain an RMSE of 72, which is a slight improvement but still not enough to predict with high precision my glucose data.
+            </p>
+
+            <!-- Actual vs. Predicted Glucose Levels -->
+            <div class="plot-item">
+                <img src="../../ressources/images/project2/plot6.png" alt="Actual vs. Predicted Glucose Levels">
+                <figcaption>Fig 7: Actual vs. Predicted Glucose Levels</figcaption>
+            </div>
+            <p>This visualization illustrates the predictive power of the XGBoost model. 
+                The scatter plot's proximity to the 45-degree line indicates high accuracy, while the line chart shows the model's predictions over time compared to the actual glucose readings, highlighting areas where the model predictions align closely with the actual values and where they diverge.
+            </p>
+
+            <p>
+                The models' predictive accuracy, depicted by the closeness of the points to the line of best fit in the scatter plot, and the congruence of the predicted and actual values in the time series plot, demonstrates the feasibility of using machine learning to support real-time glucose level monitoring. 
+                However, as with all models, there is room for improvement. 
+                Enhancing the model could involve hyperparameter tuning, incorporating more diverse datasets, or exploring other algorithmic approaches such as deep learning for potential gains in predictive performance.
+            </p>
+
         </div>
         <div class="results">
             <h2>Conclusion</h2>
